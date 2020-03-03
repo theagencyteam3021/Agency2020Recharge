@@ -14,7 +14,7 @@ public class Carousel extends AgencySystem{
 
     protected Boolean advanceRequested = false;
     protected Boolean reverseAdvanceRequested = false;
-    protected Boolean MODE_LOADING = true;
+    protected Boolean modeLoading = true;
 
 
 
@@ -128,11 +128,11 @@ private DigitalInput dig3 = new DigitalInput(3);
     }
 
     public void loadBalls(){
-        MODE_LOADING = true;
+        modeLoading = true;
     }
 
     public void unloadBalls(){
-        MODE_LOADING = false;
+        modeLoading = false;
     }
 
 
@@ -140,10 +140,10 @@ private DigitalInput dig3 = new DigitalInput(3);
         boolean LIMIT_SWITCH_IS_ENABLED = m_forwardLimit.get();
         boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
 
-        if (MODE_LOADING){
+        if (modeLoading){
             m_motor.set(0.06);
         }
-        else if (!MODE_LOADING){
+        else if (!modeLoading){
             m_motor.set(-0.06);
         }
     
