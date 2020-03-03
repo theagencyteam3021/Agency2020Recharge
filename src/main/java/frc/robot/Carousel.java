@@ -7,6 +7,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 
 public class Carousel extends AgencySystem{
 
@@ -44,6 +46,11 @@ public class Carousel extends AgencySystem{
 // |          |            |          |
 // |          |            |          |
 // +----------+            +----------+
+
+private DigitalInput dig1 = new DigitalInput(1);
+private DigitalInput dig2 = new DigitalInput(2);
+private DigitalInput dig3 = new DigitalInput(3);
+
 
     
     public Carousel(int deviceID, Boolean debug){
@@ -99,18 +106,15 @@ public class Carousel extends AgencySystem{
     }
 
     public Boolean hasBall1() {
-        //TODO: Limit Switch Implementation
-        return false;
+        return dig1.get();
     }
 
     public Boolean hasBall2() {
-         //TODO: Limit Switch Implementation
-        return false;
+        return dig2.get();
     }
 
     public Boolean hasBall3() {
-         //TODO: Limit Switch Implementation
-        return false;
+        return dig3.get();
     }
 
     public void requestForwardAdvance() {
