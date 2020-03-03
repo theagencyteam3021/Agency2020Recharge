@@ -22,6 +22,29 @@ public class Carousel extends AgencySystem{
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitPolarity;
     private CANDigitalInput.LimitSwitchPolarity m_reverseLimitPolarity;
 
+
+    //Limit Switch for Ball Position
+    // DI -> Port       Ball Position
+    //          1               1
+    //          2               2
+    //          3               3
+
+
+//     +---------+
+//     |         |
+//     |    3    |
+//     |         |
+//     |         |
+//     +---------+
+
+// +----------+            +----------+
+// |          |            |          |
+// |          |            |          |
+// |    1     |            |    2     |
+// |          |            |          |
+// |          |            |          |
+// +----------+            +----------+
+
     
     public Carousel(int deviceID, Boolean debug){
         new Carousel(deviceID, "CAN" + String.valueOf(deviceID), false);
