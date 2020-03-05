@@ -17,7 +17,7 @@ public class BallHandler extends AgencySystem{
     private boolean intakeRequested = false;
     private boolean shotRequested = false; 
 
-    public BallHandler(Intake intake, Carousel carousel, Elevator elevator, Shooter shooter, String name, Boolean debug){
+    public BallHandler(String name, Boolean debug){
 
         this.name = name;
         this.debug = debug;
