@@ -46,7 +46,7 @@ public class Shooter extends AgencySystem{
     public void requestAngleChange(ShooterAngle requestedAngle) {
 
         //???? por que = requestedAngle;
-
+        
     }
 
     public void teleopPeriodic() {
