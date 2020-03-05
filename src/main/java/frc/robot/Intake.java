@@ -42,7 +42,9 @@ public class Intake extends AgencySystem{
     public void requestStop() {
         intakeRequested = false;
     }
-
+    public boolean inProgress(){
+        return intakeRequested;
+    }
     public Boolean hasBall() {
         //TODO: implement limit switch (possibly done)
         return m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get(); 

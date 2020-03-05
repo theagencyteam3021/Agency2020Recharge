@@ -18,9 +18,9 @@ public class Elevator extends AgencySystem{
     private CANDigitalInput m_forwardLimitElevator;
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitElevatorPolarity;
 
-    private DigitalInput elevatorBeamSensor = new DigitalInput(4);
+    private DigitalInput elevatorBeamSensor;
 
-    public Elevator(int deviceID1, int deviceID2, String name, Boolean debug){
+    public Elevator(int deviceID1, int deviceID2, int beam, String name, Boolean debug){
     
         this.name = name;
         this.debug = debug;
@@ -37,7 +37,7 @@ public class Elevator extends AgencySystem{
 
         m_forwardLimitElevator.enableLimitSwitch(false);
 
-        m_elevator.set(.5);
+        this.elevatorBeamSensor = new DigitalInput(beam);
     
     }
 
@@ -55,6 +55,10 @@ public class Elevator extends AgencySystem{
 
     public void requestElevate() {
         elevateRequested = true;        
+    }
+
+    public void teleopInit() {
+        m_elevator.set(.5);
     }
 
     public void teleopPeriodic() {

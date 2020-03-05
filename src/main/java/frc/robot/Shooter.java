@@ -12,28 +12,28 @@ public class Shooter extends AgencySystem{
     protected Boolean shotRequested = false;
     public enum ShooterAngle{SHORT,LONG};
 
-    private CANSparkMax m_motor1;
-    private CANSparkMax m_motor2;
+    private CANSparkMax m_motorL;
+    private CANSparkMax m_motorR;
     private CANSparkMax m_angle;
 
 
-    public Shooter(int deviceID1, int deviceID2, int angleID, String name,
+    public Shooter(int leftMotor, int rightMotor, int angleID, String name,
             Boolean debug) {
 
         this.name = name;
         this.debug = debug;
 
-        m_motor1 = new CANSparkMax(deviceID1, MotorType.kBrushless);
-        m_motor2 = new CANSparkMax(deviceID2, MotorType.kBrushless);
+        m_motorL = new CANSparkMax(leftMotor, MotorType.kBrushless);
+        m_motorR = new CANSparkMax(rightMotor, MotorType.kBrushless);
         m_angle = new CANSparkMax(angleID, MotorType.kBrushless);
 
-        m_motor1.restoreFactoryDefaults();
-        m_motor2.restoreFactoryDefaults();
+        m_motorL.restoreFactoryDefaults();
+        m_motorR.restoreFactoryDefaults();
         m_angle.restoreFactoryDefaults();
 
     }
 
-    public void requestShot() {
+    public void requestStart() {
 
         this.shotRequested = true;
 
@@ -50,14 +50,17 @@ public class Shooter extends AgencySystem{
     }
 
     public void teleopPeriodic() {
+        //TODO: one motor needs to be spinning in reverse
+        /*
         if (shotRequested) {
-            m_motor1.set(.65);
-            m_motor2.set(.65);
+            m_motorL.set(.65);
+            m_motorR.set(.65);
         }
         else {
-            m_motor1.set(0);
-            m_motor2.set(0);
+            m_motorL.set(0);
+            m_motorR.set(0);
         }
+        */
 
     }
 

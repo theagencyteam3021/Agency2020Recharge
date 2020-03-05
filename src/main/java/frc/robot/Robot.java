@@ -30,8 +30,8 @@ public class Robot extends TimedRobot {
     activeSystems = new ArrayList<AgencySystem>();
 
 
-    carousel = new Carousel(17, DEBUG);
-    activeSystems.add(carousel);
+    //carousel = new Carousel(17, DEBUG);
+    //activeSystems.add(carousel);
 
    
 

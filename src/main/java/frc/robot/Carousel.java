@@ -47,20 +47,20 @@ public class Carousel extends AgencySystem{
 // |          |            |          |
 // +----------+            +----------+
 
-private DigitalInput dig1 = new DigitalInput(1);
-private DigitalInput dig2 = new DigitalInput(2);
-private DigitalInput dig3 = new DigitalInput(3);
+    private DigitalInput beam1;
+    private DigitalInput beam2;
+    private DigitalInput beam3;
 
 
-    
+    /*
     public Carousel(int deviceID, Boolean debug){
         new Carousel(deviceID, "CAN" + String.valueOf(deviceID), false);
     }
     public Carousel(int deviceID, String Name){
         new Carousel(deviceID, Name, false);
     }
-
-    public Carousel(int deviceID, String name, Boolean debug){
+*/
+    public Carousel(int deviceID, int beam1, int beam2, int beam3, String name, Boolean debug){
     
     this.name = name;
     this.debug = debug;
@@ -103,53 +103,61 @@ private DigitalInput dig3 = new DigitalInput(3);
      */
     m_forwardLimit.enableLimitSwitch(false);
     m_reverseLimit.enableLimitSwitch(true);
+
+    //digital inputs
+    this.beam1 = new DigitalInput(beam1);
+    this.beam2 = new DigitalInput(beam2);
+    this.beam3 = new DigitalInput(beam3);
+
     }
 
     public Boolean hasBall1() {
-        return dig1.get();
+        return beam1.get();
     }
 
     public Boolean hasBall2() {
-        return dig2.get();
+        return beam2.get();
     }
 
     public Boolean hasBall3() {
-        return dig3.get();
+        return beam3.get();
     }
 
     public void requestForwardAdvance() {
         advanceRequested = true;
-
-
+        reverseAdvanceRequested = false;
     }
 
     public void requestReverseAdvance() {
         reverseAdvanceRequested = true;
+        advanceRequested = false;
     }
 
-    public void loadBalls(){
+    /*public void loadBalls(){
         modeLoading = true;
     }
 
     public void unloadBalls(){
         modeLoading = false;
+    }*/
+
+    public boolean isRotating(){
+        return !m_forwardLimit.get();
     }
-
-
     public void teleopPeriodic() {
         boolean LIMIT_SWITCH_IS_ENABLED = m_forwardLimit.get();
         boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
 
-        if (modeLoading){
+        if (advanceRequested){
             m_motor.set(0.06);
         }
-        else if (!modeLoading){
+        else if (reverseAdvanceRequested){
             m_motor.set(-0.06);
         }
     
-        System.out.println("Carousel Request " + advanceRequested);
-        System.out.println("Polarity " + m_forwardLimitPolarity);
-        System.out.println("Limit Switch Enabled " + LIMIT_SWITCH_IS_ENABLED);
+        //System.out.println("Carousel Request " + advanceRequested);
+        //System.out.println("Polarity " + m_forwardLimitPolarity);
+        //System.out.println("Limit Switch Enabled " + LIMIT_SWITCH_IS_ENABLED);
 
         if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && LIMIT_SWITCH_IS_ENABLED){
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
