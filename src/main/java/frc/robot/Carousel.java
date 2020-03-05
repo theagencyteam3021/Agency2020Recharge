@@ -7,15 +7,50 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 
 public class Carousel extends AgencySystem{
 
-    private Boolean rotate_request;
+    protected Boolean advanceRequested = false;
+    protected Boolean reverseAdvanceRequested = false;
+    protected Boolean modeLoading = true;
+
+
 
     private CANSparkMax m_motor;
     private CANDigitalInput m_forwardLimit;
     private CANDigitalInput m_reverseLimit;
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitPolarity;
+    private CANDigitalInput.LimitSwitchPolarity m_reverseLimitPolarity;
+
+
+    //Limit Switch for Ball Position
+    // DI -> Port       Ball Position
+    //          1               1
+    //          2               2
+    //          3               3
+
+
+//     +---------+
+//     |         |
+//     |    3    |
+//     |         |
+//     |         |
+//     +---------+
+
+// +----------+            +----------+
+// |          |            |          |
+// |          |            |          |
+// |    1     |            |    2     |
+// |          |            |          |
+// |          |            |          |
+// +----------+            +----------+
+
+private DigitalInput dig1 = new DigitalInput(1);
+private DigitalInput dig2 = new DigitalInput(2);
+private DigitalInput dig3 = new DigitalInput(3);
+
 
     
     public Carousel(int deviceID, Boolean debug){
@@ -24,6 +59,7 @@ public class Carousel extends AgencySystem{
     public Carousel(int deviceID, String Name){
         new Carousel(deviceID, Name, false);
     }
+
     public Carousel(int deviceID, String name, Boolean debug){
     
     this.name = name;
@@ -46,10 +82,16 @@ public class Carousel extends AgencySystem{
      * Limit switches can be configured to one of two polarities:
      *  com.revrobotics.CANDigitalInput.LimitSwitchPolarity.kNormallyOpen
      *  com.revrobotics.CANDigitalInput.LimitSwitchPolarity.kNormallyClosed
+     * 
      */
+
     m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+    m_forwardLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kForward, m_forwardLimitPolarity);
     m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
-    m_reverseLimit = m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    
+    m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+    m_reverseLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kReverse, m_reverseLimitPolarity);
+    m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
 
     /**
      * Limit switches are enabled by default when the are intialized. They can be disabled
@@ -61,54 +103,78 @@ public class Carousel extends AgencySystem{
      */
     m_forwardLimit.enableLimitSwitch(false);
     m_reverseLimit.enableLimitSwitch(true);
-
     }
 
     public Boolean hasBall1() {
-        return false;
+        return dig1.get();
     }
 
     public Boolean hasBall2() {
-        return false;
+        return dig2.get();
     }
 
     public Boolean hasBall3() {
-        return false;
+        return dig3.get();
     }
 
     public void requestForwardAdvance() {
+        advanceRequested = true;
+
 
     }
 
     public void requestReverseAdvance() {
-        
+        reverseAdvanceRequested = true;
     }
 
-    public void teleopPeriodic() {
+    public void loadBalls(){
+        modeLoading = true;
+    }
 
+    public void unloadBalls(){
+        modeLoading = false;
+    }
+
+
+    public void teleopPeriodic() {
         boolean LIMIT_SWITCH_IS_ENABLED = m_forwardLimit.get();
-        if (true){
+        boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
+
+        if (modeLoading){
             m_motor.set(0.06);
         }
-        // else if (!MODE_LOADING){
-        //     m_motor.set(-0.06);
-        // }
+        else if (!modeLoading){
+            m_motor.set(-0.06);
+        }
     
-        System.out.println("Carousel Request " + rotate_request);
+        System.out.println("Carousel Request " + advanceRequested);
         System.out.println("Polarity " + m_forwardLimitPolarity);
         System.out.println("Limit Switch Enabled " + LIMIT_SWITCH_IS_ENABLED);
-        if (rotate_request && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && LIMIT_SWITCH_IS_ENABLED){
+
+        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && LIMIT_SWITCH_IS_ENABLED){
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-            m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
-          
-    
+            m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);  
         }
         
         else if(LIMIT_SWITCH_IS_ENABLED && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
-          
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
-            rotate_request = false;
+            advanceRequested = false;
+        }
+
+        //Reverse Advance Request
+        if (reverseAdvanceRequested && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && REVERSE_LIMIT_ENABLED){
+            m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+            m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
+          
+    
+        }
+        
+        else if(REVERSE_LIMIT_ENABLED && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+          
+            m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+            m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
+            reverseAdvanceRequested = false;
         }
 
     }
