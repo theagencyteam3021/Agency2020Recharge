@@ -30,6 +30,10 @@ public class Drive extends AgencySystem {
 
     }
 
+    public void drive(double xpos, double ypos){
+        drive.arcadeDrive(-ypos,xpos);
+    }
+
     public void teleopPeriodic() {
 
     }
