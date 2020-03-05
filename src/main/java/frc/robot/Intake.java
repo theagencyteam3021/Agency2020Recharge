@@ -44,8 +44,8 @@ public class Intake extends AgencySystem{
     }
 
     public Boolean hasBall() {
-        //TODO: implement limit switch 
-        return false;
+        //TODO: implement limit switch (possibly done)
+        return m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get(); 
     }
 
     //advance only if there is a ball, separate the speed control groups
