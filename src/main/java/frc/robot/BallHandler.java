@@ -49,6 +49,12 @@ public class BallHandler extends AgencySystem{
         shooter.requestAngleChange(angle);
     }
 
+    public void teleopInit(){
+        lastMode = ballHandlerMode.LOADING;
+        elevator.teleopInit();
+        
+    }
+
     public void teleopPeriodic() {
         
         if(elevator.isDown() && !elevator.hasBall()){

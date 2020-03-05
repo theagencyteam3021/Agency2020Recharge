@@ -11,13 +11,16 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 public class Robot extends TimedRobot {
 
-  private Carousel carousel;
+  private BallHandler ballHandler;
 
   private ArrayList<AgencySystem> activeSystems;
+
+
 
   // public String kEnable;
   // public String kDisable;
@@ -25,25 +28,29 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     
+    
+  
     Boolean DEBUG = false;
 
     activeSystems = new ArrayList<AgencySystem>();
 
-
-    //carousel = new Carousel(17, DEBUG);
-    //activeSystems.add(carousel);
-
-   
-
+    ballHandler = new BallHandler("Ball Handler", DEBUG);
+    activeSystems.add(ballHandler);
+    
   }
 
   //autonomous
 
   @Override
-  public void teleopPeriodic() {
-   
+  public void teleopInit() {
+    ballHandler.startLoad();
+    activeSystems.forEach((n) -> n.teleopInit());
+  }
 
-   
+  @Override
+  public void teleopPeriodic() {
+
     activeSystems.forEach((n) -> n.teleopPeriodic());
+  
   }
 }
