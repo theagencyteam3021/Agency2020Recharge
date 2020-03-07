@@ -5,6 +5,7 @@ import frc.robot.AgencySystem;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -85,11 +86,12 @@ public class Carousel extends AgencySystem{
      * 
      */
 
-    m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+    m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
     m_forwardLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kForward, m_forwardLimitPolarity);
     m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
     
-    m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+    
+    m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
     m_reverseLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kReverse, m_reverseLimitPolarity);
     m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
 
@@ -101,8 +103,10 @@ public class Carousel extends AgencySystem{
      * 
      * The isLimitSwitchEnabled() method can be used to check if the limit switch is enabled
      */
-    m_forwardLimit.enableLimitSwitch(false);
+    m_forwardLimit.enableLimitSwitch(true);
     m_reverseLimit.enableLimitSwitch(true);
+
+    m_motor.setIdleMode(IdleMode.kBrake);
 
     //digital inputs
     this.beam1 = new DigitalInput(beam1);
@@ -112,18 +116,18 @@ public class Carousel extends AgencySystem{
     }
 
     public Boolean hasBall1() {
-        console_debug("Has Ball 1 -- " + beam1.get());
-        return beam1.get();
+        console_debug("Has Ball 1 -- " + !beam1.get());
+        return !beam1.get();
     }
 
     public Boolean hasBall2() {
-        console_debug("Has Ball 2 -- " + beam2.get());
-        return beam2.get();
+        console_debug("Has Ball 2 -- " + !beam2.get());
+        return !beam2.get();
     }
 
     public Boolean hasBall3() {
-        console_debug("Has Ball 3 -- "+ beam3.get());
-        return beam3.get();
+        console_debug("Has Ball 3 -- "+ !beam3.get());
+        return !beam3.get();
     }
 
     public void requestForwardAdvance() {
@@ -147,27 +151,31 @@ public class Carousel extends AgencySystem{
     public boolean isRotating(){
         return !m_forwardLimit.get();
     }
+
+    public void teleopInit() {
+        this.advanceRequested = true;
+    }
     public void teleopPeriodic() {
-        boolean LIMIT_SWITCH_IS_ENABLED = m_forwardLimit.get();
+        boolean FORWARD_LIMIT_ENABLED = m_forwardLimit.get();
         boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
 
         if (advanceRequested){
-            m_motor.set(0.06);
+            m_motor.set(0.15);
         }
         else if (reverseAdvanceRequested){
-            m_motor.set(-0.06);
+            m_motor.set(-0.15);
         }
     
-        //System.out.println("Carousel Request " + advanceRequested);
-        //System.out.println("Polarity " + m_forwardLimitPolarity);
-        //System.out.println("Limit Switch Enabled " + LIMIT_SWITCH_IS_ENABLED);
+        console_debug("Carousel Request " + advanceRequested);
+        console_debug("Polarity " + m_forwardLimitPolarity);
+        console_debug("Limit Switch Enabled " + FORWARD_LIMIT_ENABLED);
 
-        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && LIMIT_SWITCH_IS_ENABLED){
-            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && FORWARD_LIMIT_ENABLED){
+            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);  
         }
         
-        else if(LIMIT_SWITCH_IS_ENABLED && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+        else if(FORWARD_LIMIT_ENABLED && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
             advanceRequested = false;

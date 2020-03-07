@@ -5,6 +5,7 @@ import frc.robot.AgencySystem;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
@@ -27,15 +28,18 @@ public class Intake extends AgencySystem{
         m_stage2.restoreFactoryDefaults();
 
         m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-        m_forwardLimit1 = m_stage1.getForwardLimitSwitch(m_forwardLimitPolarity);
-        m_forwardLimit2 = m_stage2.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+        m_forwardLimit1 = m_stage1.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+        m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
 
         m_forwardLimit1.enableLimitSwitch(true);
         m_forwardLimit2.enableLimitSwitch(true);
+
+        m_stage2.setIdleMode(IdleMode.kBrake);
     }
 
 
     public void requestIntake() {
+        console_debug("requestIntake");
         intakeRequested = true;
     }
 
@@ -46,8 +50,9 @@ public class Intake extends AgencySystem{
         return intakeRequested;
     }
     public Boolean hasBall() {
-        //TODO: implement limit switch (possibly done)
-        return m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get(); 
+        Boolean r =  m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get();
+        console_debug("hasBall: " + r);
+        return r; 
     }
 
     //advance only if there is a ball, separate the speed control groups
@@ -75,7 +80,7 @@ public class Intake extends AgencySystem{
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
         }
-        else if(m_forwardLimit2.get() && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+        else if(this.advanceRequested && m_forwardLimit2.get() && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
             console_debug("Forward Limit Switch Polarity NO , Switching to NC");
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);

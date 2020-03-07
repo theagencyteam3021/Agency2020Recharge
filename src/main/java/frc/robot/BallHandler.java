@@ -32,18 +32,21 @@ public class BallHandler extends AgencySystem{
 
     public void startLoad() {
         console_debug("Start Load");
-        lastMode = ballHandlerMode.LOADING;
-        intakeRequested = true; 
-        shotRequested = false;
+        this.lastMode = ballHandlerMode.LOADING;
+        this.intakeRequested = true; 
+        this.shotRequested = false;
+        this.intake.requestIntake();
     }
     public void stopLoad(){
-        intakeRequested = false; 
+        intakeRequested = false;
+        this.intake.requestStop(); 
     }
 
     public void shoot() {
-        lastMode = ballHandlerMode.SHOOTING;
-        shotRequested = true;
-        intakeRequested = false; 
+        this.lastMode = ballHandlerMode.SHOOTING;
+        this.shotRequested = true;
+        this.intakeRequested = false; 
+        
     }
 
     public void changeShootAngle(Shooter.ShooterAngle angle) {
@@ -52,43 +55,50 @@ public class BallHandler extends AgencySystem{
 
     public void teleopInit(){
         lastMode = ballHandlerMode.LOADING;
+        carousel.teleopInit();
         elevator.teleopInit();
         
     }
 
     public void teleopPeriodic() {
-        
-        if(elevator.isDown() && !elevator.hasBall()){
-            shooter.requestStop();
-            //if(carousel.hasBall3()){
-             //   elevator.requestOuttake();
-            //}
-        }
+        console_debug("teleop");
+        // if(elevator.isDown() && !elevator.hasBall()){
+        //     shooter.requestStop();
+        //     //if(carousel.hasBall3()){
+        //      //   elevator.requestOuttake();
+        //     //}
+        // }
         if(justLoaded && !carousel.isRotating() && !intake.inProgress()){
             carousel.requestForwardAdvance();
             return;
         }
         //TODO: optimize to allow elevator to load at the same time
         else if (intake.inProgress()){
-            return;
+            //TODO: THIS WILL PREVENT TELOP FROM RUNNING!!
+           // return;
         }
         else {
             justLoaded = false;
         }
         if(lastMode == ballHandlerMode.LOADING){
             if(elevator.isDown() && !elevator.hasBall() && carousel.hasBall3()){
+                console_debug("Loading 1");
                 elevator.requestOuttake();
             }
             else if(elevator.hasBall() && intake.hasBall() && !carousel.hasBall2()){
+                console_debug("Loading 2");
                 carousel.requestForwardAdvance();           
             }
             else if(elevator.hasBall() && intake.hasBall() && !carousel.hasBall3()){
+                console_debug("Loading 3");
                 carousel.requestReverseAdvance();
             }
             else if((carousel.hasBall1() || carousel.hasBall2()) && !carousel.hasBall3()){
+                console_debug("Loading 4");
                 carousel.requestReverseAdvance();
             }
             else if(intake.hasBall() && !carousel.hasBall1()){
+                console_debug("Loading 5");
                 intake.requestAdvance();
                 justLoaded = true;
             }
@@ -120,6 +130,10 @@ public class BallHandler extends AgencySystem{
                 justLoaded = true;
             }
         }
+        this.intake.teleopPeriodic();
+        this.carousel.teleopPeriodic();
+        this.elevator.teleopPeriodic();
+        this.shooter.teleopPeriodic();
     }
 
 }
