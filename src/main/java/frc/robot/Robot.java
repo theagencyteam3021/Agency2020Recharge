@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
 
-  private Carousel carousel;
+  //private Drive drive;
 
   private ArrayList<AgencySystem> activeSystems;
 
@@ -30,8 +30,8 @@ public class Robot extends TimedRobot {
     activeSystems = new ArrayList<AgencySystem>();
 
 
-    carousel = new Carousel(17, DEBUG);
-    activeSystems.add(carousel);
+   // drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive", DEBUG);
+   // activeSystems.add(drive);
 
    
 
