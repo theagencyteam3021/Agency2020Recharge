@@ -42,10 +42,12 @@ public class Elevator extends AgencySystem{
     }
 
     public Boolean hasBall() {
+        console_debug("Has Ball " + elevatorBeamSensor.get());
         return elevatorBeamSensor.get();
     }
 
     public Boolean isDown() {
+        console_debug("Is Down " + m_forwardLimitElevator.get());
         return m_forwardLimitElevator.get();
     }
 

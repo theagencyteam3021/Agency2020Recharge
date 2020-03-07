@@ -31,6 +31,7 @@ public class BallHandler extends AgencySystem{
     }
 
     public void startLoad() {
+        console_debug("Start Load");
         lastMode = ballHandlerMode.LOADING;
         intakeRequested = true; 
         shotRequested = false;

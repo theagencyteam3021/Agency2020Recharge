@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     
     
   
-    Boolean DEBUG = false;
+    Boolean DEBUG = true;
 
     activeSystems = new ArrayList<AgencySystem>();
 

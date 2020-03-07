@@ -112,14 +112,17 @@ public class Carousel extends AgencySystem{
     }
 
     public Boolean hasBall1() {
+        console_debug("Has Ball 1 -- " + beam1.get());
         return beam1.get();
     }
 
     public Boolean hasBall2() {
+        console_debug("Has Ball 2 -- " + beam2.get());
         return beam2.get();
     }
 
     public Boolean hasBall3() {
+        console_debug("Has Ball 3 -- "+ beam3.get());
         return beam3.get();
     }
 

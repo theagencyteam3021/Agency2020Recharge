@@ -9,7 +9,7 @@ public class RobotMap {
     public static final int lDriveFront = 8;
     public static final int lDriveBack = 13;
 
-    public static final int intakeStage1 = 104;
+    public static final int intakeStage1 = 18;
     public static final int intakeStage2 = 10;
 
     public static final int carousel = 17;

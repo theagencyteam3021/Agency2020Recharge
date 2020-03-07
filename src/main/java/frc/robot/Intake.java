@@ -60,19 +60,23 @@ public class Intake extends AgencySystem{
     public void teleopPeriodic() {
 
         if(intakeRequested){
+            console_debug("Intake Requested");
             m_stage1.set(.5);
             m_stage2.set(.5);
 
         }else{
+            console_debug("Intake Not Requested");
             m_stage1.set(0);
             m_stage2.set(0);
         }
 
         if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && m_forwardLimit2.get()){
+            console_debug("Forward Limit Switch Polarity NC , Switching to NO");
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
         }
         else if(m_forwardLimit2.get() && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+            console_debug("Forward Limit Switch Polarity NO , Switching to NC");
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
             advanceRequested = false;
