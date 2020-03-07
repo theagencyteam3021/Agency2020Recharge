@@ -4,22 +4,22 @@ public class RobotMap {
 
     //motors
 
-    public static final int rDriveFront = 100;
-    public static final int rDriveBack = 101;
-    public static final int lDriveFront = 102;
-    public static final int lDriveBack = 103;
+    public static final int rDriveFront = 14;
+    public static final int rDriveBack = 9;
+    public static final int lDriveFront = 8;
+    public static final int lDriveBack = 13;
 
     public static final int intakeStage1 = 104;
-    public static final int intakeStage2 = 105;
+    public static final int intakeStage2 = 10;
 
-    public static final int carousel = 106;
+    public static final int carousel = 17;
 
-    public static final int outtake = 107;
+    public static final int outtake = 16;
 
-    public static final int elevator = 108;
+    public static final int elevator = 12;
 
-    public static final int rShooter = 109;
-    public static final int lShooter = 110;
+    public static final int rShooter = 11;
+    public static final int lShooter = 15;
 
     public static final int shooterAngle = 111;
 
