@@ -24,7 +24,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    
+   
+
     Boolean DEBUG = false;
 
     activeSystems = new ArrayList<AgencySystem>();
@@ -38,6 +39,19 @@ public class Robot extends TimedRobot {
   }
 
   //autonomous
+  @Override
+  public void autonomousInit() {
+   
+  }
+
+  /**
+   * This function is called periodically during autonomous.
+   */
+  @Override
+  public void autonomousPeriodic() {
+    
+    }
+  }
 
   @Override
   public void teleopPeriodic() {
