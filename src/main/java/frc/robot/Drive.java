@@ -24,6 +24,8 @@ public class Drive extends AgencySystem {
         right2motor = new CANSparkMax(backRight, MotorType.kBrushless);
 
         left2motor.follow(leftMotor);
+        leftMotor.setInverted(true);
+
         right2motor.follow(rightMotor);
 
         drive = new DifferentialDrive(leftMotor, rightMotor);

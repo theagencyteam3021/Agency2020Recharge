@@ -7,24 +7,19 @@
 
 package frc.robot;
 
-
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Robot extends TimedRobot {
 
-
   private BallHandler ballHandler;
-  
+
   private ArrayList<AgencySystem> activeSystems;
 
-  private Carousel carousel;
-
-  //private Drive drive;
-
+  private Drive drive;
 
   private XboxController xbox;
 
@@ -33,28 +28,25 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    
+
     xbox = new XboxController(0);
-  
+
     Boolean DEBUG = true;
 
     activeSystems = new ArrayList<AgencySystem>();
 
     ballHandler = new BallHandler("Ball Handler", DEBUG);
-    //carousel = new Carousel(RobotMap.carousel, RobotMap.carouselBeam1, RobotMap.carouselBeam2,
-       //                     RobotMap.carouselBeam3, "carousel", DEBUG);
 
+    drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive",
+        DEBUG);
 
     activeSystems.add(ballHandler);
     
+    activeSystems.add(drive);
 
-   // drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive", DEBUG);
-   // activeSystems.add(drive);
-
-  
   }
 
-  //autonomous
+  // autonomous
 
   @Override
   public void teleopInit() {
@@ -64,25 +56,23 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    // if (xbox.getAButton()){
-    //   carousel.requestForwardAdvance();
-    // }
-    // if (xbox.getXButton()){
-    //   carousel.requestReverseAdvance();
-    // }
+    // Drive
+    double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
+    double XboxPosY = xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);
+    drive.drive(-XboxPosY, XboxPosX);
 
-    if (xbox.getBButton()){
+    // Ball Handler
+    if (xbox.getBButton()) {
       ballHandler.startLoad();
-    }
-    else{
+    } else {
       ballHandler.stopLoad();
     }
 
-    if (xbox.getAButton()){
+    if (xbox.getAButton()) {
       ballHandler.shoot();
     }
 
     activeSystems.forEach((n) -> n.teleopPeriodic());
-  
+
   }
 }
