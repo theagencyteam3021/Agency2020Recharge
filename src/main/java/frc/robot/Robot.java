@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj.XboxController;
 public class Robot extends TimedRobot {
 
   private BallHandler ballHandler;
-
+  
   private ArrayList<AgencySystem> activeSystems;
 
+  private Carousel carousel;
 
+  private XboxController xbox;
 
   // public String kEnable;
   // public String kDisable;
@@ -28,13 +30,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     
-    
+    xbox = new XboxController(0);
   
     Boolean DEBUG = true;
 
     activeSystems = new ArrayList<AgencySystem>();
 
     ballHandler = new BallHandler("Ball Handler", DEBUG);
+    //carousel = new Carousel(RobotMap.carousel, RobotMap.carouselBeam1, RobotMap.carouselBeam2,
+       //                     RobotMap.carouselBeam3, "carousel", DEBUG);
+
     activeSystems.add(ballHandler);
     
   }
@@ -43,12 +48,29 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    ballHandler.startLoad();
     activeSystems.forEach((n) -> n.teleopInit());
   }
 
   @Override
   public void teleopPeriodic() {
+
+    // if (xbox.getAButton()){
+    //   carousel.requestForwardAdvance();
+    // }
+    // if (xbox.getXButton()){
+    //   carousel.requestReverseAdvance();
+    // }
+
+    if (xbox.getBButton()){
+      ballHandler.startLoad();
+    }
+    else{
+      ballHandler.stopLoad();
+    }
+
+    if (xbox.getAButton()){
+      ballHandler.shoot();
+    }
 
     activeSystems.forEach((n) -> n.teleopPeriodic());
   

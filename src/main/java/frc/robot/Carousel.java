@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Carousel extends AgencySystem{
 
     protected Boolean advanceRequested = false;
-    protected Boolean reverseAdvanceRequested = false;
+ //   protected Boolean reverseAdvanceRequested = false;
     protected Boolean modeLoading = true;
 
 
@@ -35,7 +35,7 @@ public class Carousel extends AgencySystem{
 
 //     +---------+
 //     |         |
-//     |    3    |
+//     |    2    |
 //     |         |
 //     |         |
 //     +---------+
@@ -43,7 +43,7 @@ public class Carousel extends AgencySystem{
 // +----------+            +----------+
 // |          |            |          |
 // |          |            |          |
-// |    1     |            |    2     |
+// |    1     |            |    3     |
 // |          |            |          |
 // |          |            |          |
 // +----------+            +----------+
@@ -91,9 +91,9 @@ public class Carousel extends AgencySystem{
     m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);
     
     
-    m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-    m_reverseLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kReverse, m_reverseLimitPolarity);
-    m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
+    // m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+    // m_reverseLimit = new CANDigitalInput(m_motor,CANDigitalInput.LimitSwitch.kReverse, m_reverseLimitPolarity);
+    // m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
 
     /**
      * Limit switches are enabled by default when the are intialized. They can be disabled
@@ -104,7 +104,7 @@ public class Carousel extends AgencySystem{
      * The isLimitSwitchEnabled() method can be used to check if the limit switch is enabled
      */
     m_forwardLimit.enableLimitSwitch(true);
-    m_reverseLimit.enableLimitSwitch(true);
+  //  m_reverseLimit.enableLimitSwitch(true);
 
     m_motor.setIdleMode(IdleMode.kBrake);
 
@@ -132,12 +132,14 @@ public class Carousel extends AgencySystem{
 
     public void requestForwardAdvance() {
         advanceRequested = true;
-        reverseAdvanceRequested = false;
+    //    reverseAdvanceRequested = false;
+        m_motor.setInverted(false);
     }
 
     public void requestReverseAdvance() {
-        reverseAdvanceRequested = true;
-        advanceRequested = false;
+     //   reverseAdvanceRequested = true;
+        advanceRequested = true;
+        m_motor.setInverted(true);
     }
 
     /*public void loadBalls(){
@@ -149,30 +151,39 @@ public class Carousel extends AgencySystem{
     }*/
 
     public boolean isRotating(){
-        return !m_forwardLimit.get();
+        return advanceRequested || !m_forwardLimit.get();
     }
 
     public void teleopInit() {
         this.advanceRequested = true;
+        m_motor.set(0.10);
     }
     public void teleopPeriodic() {
         boolean FORWARD_LIMIT_ENABLED = m_forwardLimit.get();
-        boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
+      //  boolean REVERSE_LIMIT_ENABLED = m_reverseLimit.get();
 
-        if (advanceRequested){
-            m_motor.set(0.15);
-        }
-        else if (reverseAdvanceRequested){
-            m_motor.set(-0.15);
-        }
+        // if (advanceRequested){
+        //     m_motor.set(0.15);
+        //     console_debug("Motor Speed = 0.15");
+        // }
+        // else if (reverseAdvanceRequested){
+        //     m_motor.set(-0.15);
+        //     console_debug("Motor Speed = NEGATIVE 0.15");
+        //     m_motor.setInverted(true);
+        // }
+        // else {
+        //     console_debug("Motor Speed = Not changing");
+        // }
     
+        console_debug("inverted: " + m_motor.getInverted());
         console_debug("Carousel Request " + advanceRequested);
         console_debug("Polarity " + m_forwardLimitPolarity);
         console_debug("Limit Switch Enabled " + FORWARD_LIMIT_ENABLED);
 
-        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && FORWARD_LIMIT_ENABLED){
-            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && FORWARD_LIMIT_ENABLED){
+            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
             m_forwardLimit = m_motor.getForwardLimitSwitch(m_forwardLimitPolarity);  
+
         }
         
         else if(FORWARD_LIMIT_ENABLED && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
@@ -182,19 +193,19 @@ public class Carousel extends AgencySystem{
         }
 
         //Reverse Advance Request
-        if (reverseAdvanceRequested && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && REVERSE_LIMIT_ENABLED){
-            m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-            m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
+        // if (reverseAdvanceRequested && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && REVERSE_LIMIT_ENABLED){
+        //     m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+        //     m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
           
     
-        }
+        // }
         
-        else if(REVERSE_LIMIT_ENABLED && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+        // else if(REVERSE_LIMIT_ENABLED && m_reverseLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
           
-            m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
-            m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
-            reverseAdvanceRequested = false;
-        }
+        //     m_reverseLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+        //     m_reverseLimit = m_motor.getReverseLimitSwitch(m_reverseLimitPolarity);
+        //     reverseAdvanceRequested = false;
+        // }
 
     }
 

@@ -15,6 +15,7 @@ public class Intake extends AgencySystem{
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitPolarity;
     protected Boolean advanceRequested = false;
     private Boolean intakeRequested = false;
+    private Boolean oneInTheChute = false;
     private CANSparkMax m_stage1, m_stage2;
     public Intake(int deviceID1, int deviceID2, String name, Boolean debug){
     
@@ -40,17 +41,35 @@ public class Intake extends AgencySystem{
 
     public void requestIntake() {
         console_debug("requestIntake");
-        intakeRequested = true;
+        //intakeRequested = true;
+        m_stage1.set(.5);
+        m_stage2.set(.5);
     }
 
     public void requestStop() {
         intakeRequested = false;
+        m_stage1.set(0);
+        m_stage2.set(0);
     }
     public boolean inProgress(){
-        return intakeRequested;
+        return advanceRequested;
     }
     public Boolean hasBall() {
-        Boolean r =  m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get();
+        Boolean r = false;
+        // m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get( 
+        if ( oneInTheChute){
+            r =  true;
+        }
+        
+
+        //  if (m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed 
+        //         && !m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get()){
+        //     r =  true;
+        // }
+        // else if (m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen 
+        // && m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity).get()){
+        //     r =  true;
+        // }
         console_debug("hasBall: " + r);
         return r; 
     }
@@ -66,23 +85,26 @@ public class Intake extends AgencySystem{
 
         if(intakeRequested){
             console_debug("Intake Requested");
-            m_stage1.set(.5);
-            m_stage2.set(.5);
 
         }else{
-            console_debug("Intake Not Requested");
-            m_stage1.set(0);
-            m_stage2.set(0);
+            console_debug("Intake Not Requested"); 
         }
 
-        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && m_forwardLimit2.get()){
-            console_debug("Forward Limit Switch Polarity NC , Switching to NO");
-            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-            m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
+        if (m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && m_forwardLimit2.get())
+        {
+            oneInTheChute = true;
         }
-        else if(this.advanceRequested && m_forwardLimit2.get() && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
+        else {
+            oneInTheChute = false;
+        }
+        if (advanceRequested && m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && m_forwardLimit2.get()){
             console_debug("Forward Limit Switch Polarity NO , Switching to NC");
             m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
+            m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
+        }
+        else if(m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && m_forwardLimit2.get()){
+            console_debug("Forward Limit Switch Polarity NC , Switching to NO");
+            m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
             advanceRequested = false;
         }

@@ -31,6 +31,9 @@ public class Shooter extends AgencySystem{
         m_motorR.restoreFactoryDefaults();
         m_angle.restoreFactoryDefaults();
 
+        m_motorL.setSmartCurrentLimit(100);
+        m_motorR.setSmartCurrentLimit(100);
+
     }
 
     public void requestStart() {
@@ -51,16 +54,16 @@ public class Shooter extends AgencySystem{
 
     public void teleopPeriodic() {
         //TODO: one motor needs to be spinning in reverse
-        /*
+        
         if (shotRequested) {
-            m_motorL.set(.65);
-            m_motorR.set(.65);
+            m_motorL.set(0.7);
+            m_motorR.set(-0.7);
         }
         else {
             m_motorL.set(0);
             m_motorR.set(0);
         }
-        */
+        
 
     }
 
