@@ -23,6 +23,8 @@ public class RobotMap {
 
     public static final int shooterAngle = 111;
 
+    public static final int climber = 20;
+
     //sensors
 
     public static final int carouselBeam1 = 1;

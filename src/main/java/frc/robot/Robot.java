@@ -11,17 +11,19 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+//import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Robot extends TimedRobot {
 
-  private BallHandler ballHandler;
+ // private BallHandler ballHandler;
 
   private ArrayList<AgencySystem> activeSystems;
 
-  private Drive drive;
+//  private Drive drive;
 
   private XboxController xbox;
+
+ private Climber climber;
 
   // public String kEnable;
   // public String kDisable;
@@ -35,14 +37,18 @@ public class Robot extends TimedRobot {
 
     activeSystems = new ArrayList<AgencySystem>();
 
-    ballHandler = new BallHandler("Ball Handler", DEBUG);
+  //  ballHandler = new BallHandler("Ball Handler", DEBUG);
 
-    drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive",
-        DEBUG);
+ //   drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive",
+ //       DEBUG);
 
-    activeSystems.add(ballHandler);
-    
-    activeSystems.add(drive);
+    climber = new Climber(RobotMap.climber, "Climber", DEBUG);
+
+ // activeSystems.add(ballHandler);
+
+  //  activeSystems.add(drive);
+
+    activeSystems.add(climber);
 
   }
 
@@ -57,20 +63,30 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     // Drive
-    double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
-    double XboxPosY = xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);
-    drive.drive(-XboxPosY, XboxPosX);
+    // double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
+    // double XboxPosY = xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);
+    // drive.drive(-XboxPosY, XboxPosX);
 
-    // Ball Handler
-    if (xbox.getBButton()) {
-      ballHandler.startLoad();
+    // // Ball Handler
+    // if (xbox.getBButton()) {
+    //   ballHandler.startLoad();
+    // } else {
+    //   ballHandler.stopLoad();
+    // }
+
+    // if (xbox.getAButton()) {
+    //   ballHandler.shoot();
+    // }
+
+    // Climber
+    if (xbox.getYButton()) {
+      climber.raiseClimber();
+    } else if (xbox.getXButton()) {
+      climber.lowerClimber();
     } else {
-      ballHandler.stopLoad();
+      climber.stopClimber();
     }
 
-    if (xbox.getAButton()) {
-      ballHandler.shoot();
-    }
 
     activeSystems.forEach((n) -> n.teleopPeriodic());
 
