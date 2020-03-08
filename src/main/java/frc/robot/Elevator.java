@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.AgencySystem;
 
 import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -83,6 +84,7 @@ public class Elevator extends AgencySystem{
 
         if (elevateRequested && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && this.isDown()){
             m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+            
             m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
           
     
