@@ -3,7 +3,9 @@ package frc.robot;
 import frc.robot.AgencySystem;
 
 import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,9 +20,9 @@ public class Elevator extends AgencySystem{
     private CANDigitalInput m_forwardLimitElevator;
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitElevatorPolarity;
 
-    private DigitalInput elevatorBeamSensor = new DigitalInput(4);
+    private DigitalInput elevatorBeamSensor;
 
-    public Elevator(int deviceID1, int deviceID2, String name, Boolean debug){
+    public Elevator(int deviceID1, int deviceID2, int beam, String name, Boolean debug){
     
         this.name = name;
         this.debug = debug;
@@ -35,17 +37,22 @@ public class Elevator extends AgencySystem{
         m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
         m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
 
-        m_forwardLimitElevator.enableLimitSwitch(false);
+        m_forwardLimitElevator.enableLimitSwitch(true);
 
-        m_elevator.set(.5);
+        m_elevator.setIdleMode(IdleMode.kBrake);
+        m_outtake.setIdleMode(IdleMode.kBrake);
+
+        this.elevatorBeamSensor = new DigitalInput(beam);
     
     }
 
     public Boolean hasBall() {
-        return elevatorBeamSensor.get();
+        console_debug("Has Ball " + !elevatorBeamSensor.get());
+        return !elevatorBeamSensor.get();
     }
 
     public Boolean isDown() {
+        console_debug("Is Down " + m_forwardLimitElevator.get());
         return m_forwardLimitElevator.get();
     }
 
@@ -53,14 +60,22 @@ public class Elevator extends AgencySystem{
         outtakeRequested = true;
     }
 
+    public boolean outtakeInProgress(){
+        return outtakeRequested;
+    }
+
     public void requestElevate() {
         elevateRequested = true;        
+    }
+
+    public void teleopInit() {
+        m_elevator.set(.2);
     }
 
     public void teleopPeriodic() {
 
         if (outtakeRequested && !this.hasBall() && this.isDown()) {
-            m_outtake.set(.5);
+            m_outtake.set(1.0);
         }
         else {
             m_outtake.set(0);
@@ -69,6 +84,7 @@ public class Elevator extends AgencySystem{
 
         if (elevateRequested && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && this.isDown()){
             m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+            
             m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
           
     
@@ -80,5 +96,7 @@ public class Elevator extends AgencySystem{
             this.elevateRequested = false;
         }
     }
+
+    
 
 }

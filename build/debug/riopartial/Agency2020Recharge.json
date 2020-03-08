@@ -1,0 +1,9 @@
+[
+  {
+    "artifact": "frcJava (in project Agency2020Recharge)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "Agency2020Recharge",
+    "language": "java"
+  }
+]

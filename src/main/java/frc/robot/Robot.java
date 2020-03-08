@@ -11,13 +11,22 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 public class Robot extends TimedRobot {
 
+
+  private BallHandler ballHandler;
+  
+  private ArrayList<AgencySystem> activeSystems;
+
+  private Carousel carousel;
+
   //private Drive drive;
 
-  private ArrayList<AgencySystem> activeSystems;
+
+  private XboxController xbox;
 
   // public String kEnable;
   // public String kDisable;
@@ -25,25 +34,55 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     
-    Boolean DEBUG = false;
+    xbox = new XboxController(0);
+  
+    Boolean DEBUG = true;
 
     activeSystems = new ArrayList<AgencySystem>();
 
+    ballHandler = new BallHandler("Ball Handler", DEBUG);
+    //carousel = new Carousel(RobotMap.carousel, RobotMap.carouselBeam1, RobotMap.carouselBeam2,
+       //                     RobotMap.carouselBeam3, "carousel", DEBUG);
+
+
+    activeSystems.add(ballHandler);
+    
 
    // drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive", DEBUG);
    // activeSystems.add(drive);
 
-   
-
+  
   }
 
   //autonomous
 
   @Override
-  public void teleopPeriodic() {
-   
+  public void teleopInit() {
+    activeSystems.forEach((n) -> n.teleopInit());
+  }
 
-   
+  @Override
+  public void teleopPeriodic() {
+
+    // if (xbox.getAButton()){
+    //   carousel.requestForwardAdvance();
+    // }
+    // if (xbox.getXButton()){
+    //   carousel.requestReverseAdvance();
+    // }
+
+    if (xbox.getBButton()){
+      ballHandler.startLoad();
+    }
+    else{
+      ballHandler.stopLoad();
+    }
+
+    if (xbox.getAButton()){
+      ballHandler.shoot();
+    }
+
     activeSystems.forEach((n) -> n.teleopPeriodic());
+  
   }
 }

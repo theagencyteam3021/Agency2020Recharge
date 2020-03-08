@@ -1,10 +1,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class AgencySystem{
     protected Boolean debug = false;
     protected String name;
+
 
 
     protected void console_debug(String string){
@@ -12,17 +14,22 @@ public class AgencySystem{
         System.out.println(this.getClass().getName() + " - " + string);
     }
 
+ /*   protected void shuffleDebug(String name, boolean boo){
+        Shuffleboard
+    }*/
+
     // We do not have a  RobotInit() because these objects should only be created in RobotInit
-    public void SimulationInit(){};
-    public void DisabledInit(){};
-    public void AutonomousInit(){};
-    public void TeleopInit(){};
-    public void TestInit(){};
-    public void RobotPeriodic(){};
-    public void SimulationPeriodic(){};
-    public void DisabledPeriodic(){};
-    public void AutonomousPeriodic(){};
+    public void simulationInit(){};
+    public void disabledInit(){};
+    public void autonomousInit(){};
+    public void teleopInit(){};
+    public void testInit(){};
+    public void robotPeriodic(){};
+    public void simulationPeriodic(){};
+    public void disabledPeriodic(){};
+    public void autonomousPeriodic(){};
     public void teleopPeriodic(){};
-    public void TestPeriodic(){};
+    public void testPeriodic(){};
+    
 
 }
