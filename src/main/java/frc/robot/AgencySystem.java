@@ -1,8 +1,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-
 public class AgencySystem{
     protected Boolean debug = false;
     protected String name;
