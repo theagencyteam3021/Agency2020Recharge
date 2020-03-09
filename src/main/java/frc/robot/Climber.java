@@ -35,11 +35,11 @@ public class Climber extends AgencySystem {
 
     
     public void raiseClimber(){
-        talonFX.set(-0.1);
+        talonFX.set(-0.3);
     }
 
     public void lowerClimber(){
-        talonFX.set(0.1);
+        talonFX.set(0.6);
     }
 
     public void stopClimber(){
