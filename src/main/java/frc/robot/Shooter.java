@@ -2,9 +2,7 @@ package frc.robot;
 
 import frc.robot.AgencySystem;
 
-import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
