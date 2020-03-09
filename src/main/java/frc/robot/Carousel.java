@@ -4,7 +4,6 @@ import frc.robot.AgencySystem;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -21,9 +20,7 @@ public class Carousel extends AgencySystem{
 
     private CANSparkMax m_motor;
     private CANDigitalInput m_forwardLimit;
-    private CANDigitalInput m_reverseLimit;
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitPolarity;
-    private CANDigitalInput.LimitSwitchPolarity m_reverseLimitPolarity;
 
 
     //Limit Switch for Ball Position
