@@ -28,6 +28,8 @@ public class Intake extends AgencySystem{
         m_stage1.restoreFactoryDefaults();
         m_stage2.restoreFactoryDefaults();
 
+        m_stage1.setInverted(true);
+
         m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
         m_forwardLimit1 = m_stage1.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
