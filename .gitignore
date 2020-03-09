@@ -1,3 +1,9 @@
+# Build Aritfacts
+*.bin
+*.lock
+.gradle/*
+build/
+
 # Compiled class file
 *.class
 
