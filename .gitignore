@@ -2,7 +2,7 @@
 *.bin
 *.lock
 .gradle/*
-build/
+build/*
 
 # Compiled class file
 *.class
