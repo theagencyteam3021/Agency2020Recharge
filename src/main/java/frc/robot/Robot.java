@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 
     // Drive
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
-    double XboxPosY = xbox.getTriggerAxis(Hand.kLeft) - xbox.getTriggerAxis(Hand.kRight);
+    double XboxPosY = xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);
     drive.drive(-XboxPosY, XboxPosX);
 
     // // Ball Handler

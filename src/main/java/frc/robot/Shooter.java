@@ -53,10 +53,10 @@ public class Shooter extends AgencySystem{
     kFF = 0.000156; 
     kMaxOutput = 1; 
     kMinOutput = -1;
-    maxRPM = 3000; // THIS IS THE SHOT SPEED
+    maxRPM = 1500; // THIS IS THE SHOT SPEED
 
     // Smart Motion Coefficients
-    maxVel = 6000; // rpm
+    maxVel = 1500; // rpm
     maxAcc = 1000;
 
     // set PID coefficients

@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
 
 
 public class Intake extends AgencySystem{
@@ -17,6 +18,8 @@ public class Intake extends AgencySystem{
     private Boolean intakeRequested = false;
     private Boolean oneInTheChute = false;
     private CANSparkMax m_stage1, m_stage2;
+    private CANEncoder m_stage2_encoder;
+
     public Intake(int deviceID1, int deviceID2, String name, Boolean debug){
     
         this.name = name;
@@ -29,23 +32,26 @@ public class Intake extends AgencySystem{
         m_stage2.restoreFactoryDefaults();
 
         m_stage1.setInverted(true);
+        m_stage2.setInverted(false);
 
         m_forwardLimitPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
         m_forwardLimit1 = m_stage1.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
 
-        m_forwardLimit1.enableLimitSwitch(true);
+        m_forwardLimit1.enableLimitSwitch(false);
         m_forwardLimit2.enableLimitSwitch(true);
 
         m_stage2.setIdleMode(IdleMode.kBrake);
+
+        m_stage2_encoder = m_stage2.getEncoder();
     }
 
 
     public void requestIntake() {
         console_debug("requestIntake");
         //intakeRequested = true;
-        m_stage1.set(.5);
-        m_stage2.set(.5);
+        m_stage1.set(0.50); //-0.75 --
+        m_stage2.set(0.80); //0.5
     }
 
     public void requestStop() {
@@ -90,6 +96,10 @@ public class Intake extends AgencySystem{
 
         }else{
             console_debug("Intake Not Requested"); 
+        }
+
+        if (m_stage2_encoder.getVelocity() == 0){
+            m_stage1.set(0);
         }
 
         if (m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && m_forwardLimit2.get())

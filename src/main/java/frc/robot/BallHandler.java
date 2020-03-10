@@ -99,7 +99,7 @@ public class BallHandler extends AgencySystem {
             return;
         }
 
-        if (carousel.isRotating()) {
+        if (carousel.isRotating() ) { //&& intake.hasBall()
             console_debug("Carousel Is Rotating RETURNING");
             intake.requestStop();
             return;
