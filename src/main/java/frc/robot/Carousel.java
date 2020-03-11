@@ -110,6 +110,8 @@ public class Carousel extends AgencySystem{
     this.beam2 = new DigitalInput(beam2);
     this.beam3 = new DigitalInput(beam3);
 
+    m_motor.burnFlash();
+
     }
 
     public Boolean hasBall1() {
@@ -153,7 +155,7 @@ public class Carousel extends AgencySystem{
 
     public void teleopInit() {
         this.advanceRequested = true;
-        m_motor.set(0.10);
+        m_motor.set(1.0);  //0.1
     }
     public void teleopPeriodic() {
         boolean FORWARD_LIMIT_ENABLED = m_forwardLimit.get();

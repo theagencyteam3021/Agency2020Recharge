@@ -16,9 +16,16 @@ public class Intake extends AgencySystem{
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitPolarity;
     protected Boolean advanceRequested = false;
     private Boolean intakeRequested = false;
+
+    // private Boolean reverseAdvanceRequest = false;
+    // private Boolean reverseIntakeRequest = false;
+
     private Boolean oneInTheChute = false;
     private CANSparkMax m_stage1, m_stage2;
     private CANEncoder m_stage2_encoder;
+
+    double stage1Power = 0.5;
+    double stage2Power = 0.8;
 
     public Intake(int deviceID1, int deviceID2, String name, Boolean debug){
     
@@ -44,14 +51,18 @@ public class Intake extends AgencySystem{
         m_stage2.setIdleMode(IdleMode.kBrake);
 
         m_stage2_encoder = m_stage2.getEncoder();
+
+
+        m_stage1.burnFlash();
+        m_stage2.burnFlash();
     }
 
-
+   
     public void requestIntake() {
         console_debug("requestIntake");
         //intakeRequested = true;
-        m_stage1.set(0.50); //-0.75 --
-        m_stage2.set(0.80); //0.5
+        m_stage1.set(stage1Power); //-0.75 --
+        m_stage2.set(stage2Power); //0.5
     }
 
     public void requestStop() {
@@ -89,6 +100,27 @@ public class Intake extends AgencySystem{
         advanceRequested = true;
     }
 
+    ///Controls for Secondary 
+
+// /////////////    
+//     public void requestReverseAdvance(){
+//         reverseAdvanceRequest = true;
+//     }
+//     public void requesetReverseIntake(){
+//         reverseIntakeRequest = true;
+//     }
+
+    public void reverseAdvance(){
+        m_stage2.set(-stage2Power);
+    }
+
+    public void reverseIntake(){
+        console_debug("REVERSE Intake Requested");
+        //intakeRequested = true;
+        m_stage1.set(-stage1Power); 
+       
+    }
+////////////
     public void teleopPeriodic() {
 
         if(intakeRequested){
@@ -120,6 +152,9 @@ public class Intake extends AgencySystem{
             m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
             advanceRequested = false;
         }
+        
+
+       
 
 
     }

@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
 
  private Drive drive;
 
-  private XboxController xbox;
+  private XboxController xbox, secondaryXbox;
 
  private Climber climber;
 
@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     xbox = new XboxController(0);
+    secondaryXbox = new XboxController(1);
 
     Boolean DEBUG = false;
 
@@ -44,9 +45,9 @@ public class Robot extends TimedRobot {
 
     climber = new Climber(RobotMap.climber, "Climber", DEBUG);
 
- activeSystems.add(ballHandler);
+    activeSystems.add(ballHandler);
 
-   activeSystems.add(drive);
+    activeSystems.add(drive);
 
     activeSystems.add(climber);
 
@@ -65,7 +66,13 @@ public class Robot extends TimedRobot {
     // Drive
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
     double XboxPosY = xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);
-    drive.drive(-XboxPosY, XboxPosX);
+
+    if (xbox.getBumper(Hand.kLeft)){
+      drive.drive( (-XboxPosY * 0.5), XboxPosX);
+    }
+    else{
+      drive.drive(-XboxPosY, XboxPosX);
+    }
 
     // // Ball Handler
     if (xbox.getBButton()) {
@@ -87,6 +94,23 @@ public class Robot extends TimedRobot {
       climber.stopClimber();
     }
 
+
+
+
+
+
+
+
+    ///Secondary Bail Controls
+    if (secondaryXbox.getAButton()){
+      ballHandler.bailIntakeStage1();
+    }
+    if (secondaryXbox.getBButton()){
+      ballHandler.bailIntakeStage2();
+    }
+    if (secondaryXbox.getYButton()){
+      //ballHandler.bailCarousel();
+    }
 
     activeSystems.forEach((n) -> n.teleopPeriodic());
 

@@ -53,10 +53,10 @@ public class Shooter extends AgencySystem{
     kFF = 0.000156; 
     kMaxOutput = 1; 
     kMinOutput = -1;
-    maxRPM = 1500; // THIS IS THE SHOT SPEED
+    maxRPM = 4500; //3000 //1500// THIS IS THE SHOT SPEED
 
     // Smart Motion Coefficients
-    maxVel = 1500; // rpm
+    maxVel = 4500; //3000 //1500 // rpm
     maxAcc = 1000;
 
     // set PID coefficients
@@ -97,6 +97,9 @@ public class Shooter extends AgencySystem{
     m_R_pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
     m_R_pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
 
+    m_motorL.burnFlash();
+    m_motorR.burnFlash();
+
     }
 
     public void requestStart() {
@@ -121,8 +124,12 @@ public class Shooter extends AgencySystem{
             m_R_pidController.setReference(maxRPM, ControlType.kVelocity);
         }
         else {
-            m_L_pidController.setReference(0, ControlType.kVelocity);
-            m_R_pidController.setReference(0, ControlType.kVelocity);
+            // m_L_pidController.setReference(0, ControlType.kVelocity);
+            // m_R_pidController.setReference(0, ControlType.kVelocity);          
+            
+            m_motorL.disable();
+            m_motorR.disable();
+
            // m_motorL.set(0);
            // m_motorR.set(0);
            // m_pidController.setReference(0, ControlType.kVelocity);

@@ -3,8 +3,10 @@ package frc.robot;
 import frc.robot.AgencySystem;
 
 import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,10 +18,19 @@ public class Elevator extends AgencySystem{
 
     private CANSparkMax m_outtake;
     private CANSparkMax m_elevator;
+
+    private CANEncoder m_elevatorEncoder;
+
     private CANDigitalInput m_forwardLimitElevator;
     private CANDigitalInput.LimitSwitchPolarity m_forwardLimitElevatorPolarity;
 
     private DigitalInput elevatorBeamSensor;
+
+    private float elevatorSoftLimit = 0;
+
+    private double elevatorStartingPos = 0;
+
+    
 
     public Elevator(int deviceID1, int deviceID2, int beam, String name, Boolean debug){
     
@@ -41,6 +52,11 @@ public class Elevator extends AgencySystem{
         m_elevator.setIdleMode(IdleMode.kBrake);
         m_outtake.setIdleMode(IdleMode.kBrake);
 
+        m_elevator.burnFlash();
+        m_outtake.burnFlash();
+
+        m_elevatorEncoder = m_elevator.getEncoder();
+
         this.elevatorBeamSensor = new DigitalInput(beam);
     
     }
@@ -51,9 +67,14 @@ public class Elevator extends AgencySystem{
     }
 
     public Boolean isDown() {
-        console_debug("Is Down " + m_forwardLimitElevator.get());
-        return m_forwardLimitElevator.get();
+        //console_debug("Is Down " + m_forwardLimitElevator.get());
+       // System.out.println("vel in isdown: " + m_elevatorEncoder.getVelocity());
+        if (m_elevatorEncoder.getVelocity() == 0 ) return true;
+        return false;
+       // return m_forwardLimitElevator.get();
     }
+
+
 
     public void requestOuttake() {
         outtakeRequested = true;
@@ -64,11 +85,17 @@ public class Elevator extends AgencySystem{
     }
 
     public void requestElevate() {
-        elevateRequested = true;        
+        if (!elevateRequested) {
+            elevateRequested = true;
+          //  elevatorSoftLimit = (float) m_elevator.getSoftLimit(SoftLimitDirection.kForward) + 90;
+            m_elevator.setSoftLimit(SoftLimitDirection.kForward, 90);
+           // m_forwardLimitElevator.enableLimitSwitch(false);
+        }
     }
 
     public void teleopInit() {
-        m_elevator.set(.2);
+        m_elevator.set(.1);
+        elevatorStartingPos = m_elevatorEncoder.getPosition();
     }
 
     public void teleopPeriodic() {
@@ -81,18 +108,35 @@ public class Elevator extends AgencySystem{
             this.outtakeRequested = false;
         }
 
-        if (elevateRequested && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed && this.isDown()){
-            m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
-            
-            m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
-          
+        console_debug("Soft Limit Value - > "+ (m_elevator.getSoftLimit(SoftLimitDirection.kForward)));
+        console_debug("Eleveator Soft Limit - > " + elevatorSoftLimit);
+
     
+        if (m_elevatorEncoder.getPosition() >= m_elevator.getSoftLimit(SoftLimitDirection.kForward)){
+            m_elevator.set(0.1);
+            
+            m_elevator.enableSoftLimit(SoftLimitDirection.kForward, false);
+            m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+            m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
+        
         }
-        else if(this.isDown() && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen){
-          
+        if (elevateRequested && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen ){ //&& this.isDown()
+            m_elevator.set(0.75);//0.6
             m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyClosed;
             m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
+            m_elevator.enableSoftLimit(SoftLimitDirection.kForward, true);
+            m_elevator.setSoftLimit(SoftLimitDirection.kForward, (float)(m_elevatorEncoder.getPosition() + 75.0)); //50
+            
+           
+
+    
+        }
+        else if( m_forwardLimitElevator.get() && m_forwardLimitElevatorPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyClosed){
+            m_elevator.set(0.75);
+            m_forwardLimitElevatorPolarity = CANDigitalInput.LimitSwitchPolarity.kNormallyOpen;
+            m_forwardLimitElevator = m_elevator.getForwardLimitSwitch(m_forwardLimitElevatorPolarity);
             this.elevateRequested = false;
+           
         }
     }
 
