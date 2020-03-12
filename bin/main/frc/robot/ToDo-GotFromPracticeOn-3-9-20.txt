@@ -1,0 +1,26 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				Todo List
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ -- Intake Shield
+ -- Shooter Wheels / Shooter Adjustment
+ -- Why it doesn't put a ball into the shooter when ball in spot three and no ball in elevator?
+
+ -- LEDs ???? ( Joking?? )
+ 
+
+ -- Allow for stage 1 intake while carosel is spinning
+
+
+ -- Mystery problem where outtake and elevator doesn't work but when the robot code is restarted it works unitl it is disabled and re-enabled. 
+Works once after the restart but not a second time after the restart
+
+ -- Check bolts on lift
+ -- Shooter back attachment. 
+
+ -- bail functions for secondary driver
+ -- reverse intake 
+
+ -- burn flash for all motors
+

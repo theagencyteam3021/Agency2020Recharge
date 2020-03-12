@@ -13,9 +13,10 @@ public class BallHandler extends AgencySystem {
     //     LOADING, SHOOTING
     // };
 
-   // private ballHandlerMode lastMode;
-    private boolean justLoaded = false;
     private boolean intakeRequested = false;
+    private boolean justLoaded = false;
+ 
+
     private boolean shotRequested = false;
     private boolean shotInProgress = false;
 
@@ -43,14 +44,12 @@ public class BallHandler extends AgencySystem {
     public void startLoad() {
         console_debug("Start Load");
        // this.lastMode = ballHandlerMode.LOADING;
-        this.intakeRequested = true;
         this.shotRequested = false;
-        this.intake.requestIntake();
+        this.intakeRequested = true;
     }
 
     public void stopLoad() {
-        intakeRequested = false;
-        this.intake.requestStop();
+        this.intakeRequested = false;
     }
 
     public void shoot() {
@@ -110,6 +109,13 @@ public class BallHandler extends AgencySystem {
         // return;
         // }
 
+        if (intakeRequested){
+            intake.requestIntake();
+        }
+        else {
+            intake.requestStop();
+        }
+
         if (elevator.isDown()) { //elevator.isDown()
             shooter.requestStop();
             shotInProgress = false;
@@ -125,7 +131,7 @@ public class BallHandler extends AgencySystem {
 
         if (carousel.isRotating() ) { //&& intake.hasBall()
             console_debug("Carousel Is Rotating RETURNING");
-            intake.requestStop();
+           // intake.requestStop();
             return;
         }
 

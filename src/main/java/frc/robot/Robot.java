@@ -15,15 +15,13 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Robot extends TimedRobot {
 
- private BallHandler ballHandler;
+  private BallHandler ballHandler;
 
-  private ArrayList<AgencySystem> activeSystems;
-
- private Drive drive;
+  private Drive drive;
 
   private XboxController xbox, secondaryXbox;
 
- private Climber climber;
+  private Climber climber;
 
   // public String kEnable;
   // public String kDisable;
@@ -36,20 +34,12 @@ public class Robot extends TimedRobot {
 
     Boolean DEBUG = false;
 
-    activeSystems = new ArrayList<AgencySystem>();
+    ballHandler = new BallHandler("Ball Handler", DEBUG);
 
-   ballHandler = new BallHandler("Ball Handler", DEBUG);
-
-   drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive",
-       DEBUG);
+    drive = new Drive(RobotMap.lDriveFront, RobotMap.rDriveFront, RobotMap.lDriveBack, RobotMap.rDriveBack, "Drive",
+        DEBUG);
 
     climber = new Climber(RobotMap.climber, "Climber", DEBUG);
-
-    activeSystems.add(ballHandler);
-
-    activeSystems.add(drive);
-
-    activeSystems.add(climber);
 
   }
 
@@ -57,7 +47,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    activeSystems.forEach((n) -> n.teleopInit());
+    ballHandler.teleopInit();
+    drive.teleopInit();
+    climber.teleopInit();
   }
 
   @Override
@@ -67,10 +59,9 @@ public class Robot extends TimedRobot {
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
     double XboxPosY = xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);
 
-    if (xbox.getBumper(Hand.kLeft)){
-      drive.drive( (-XboxPosY * 0.5), XboxPosX);
-    }
-    else{
+    if (xbox.getBumper(Hand.kLeft)) {
+      drive.drive((-XboxPosY * 0.5), XboxPosX);
+    } else {
       drive.drive(-XboxPosY, XboxPosX);
     }
 
@@ -94,25 +85,20 @@ public class Robot extends TimedRobot {
       climber.stopClimber();
     }
 
-
-
-
-
-
-
-
-    ///Secondary Bail Controls
-    if (secondaryXbox.getAButton()){
+    /// Secondary Bail Controls
+    if (secondaryXbox.getAButton()) {
       ballHandler.bailIntakeStage1();
     }
-    if (secondaryXbox.getBButton()){
+    if (secondaryXbox.getBButton()) {
       ballHandler.bailIntakeStage2();
     }
-    if (secondaryXbox.getYButton()){
-      //ballHandler.bailCarousel();
+    if (secondaryXbox.getYButton()) {
+      // ballHandler.bailCarousel();
     }
 
-    activeSystems.forEach((n) -> n.teleopPeriodic());
+    ballHandler.teleopPeriodic();
+    drive.teleopPeriodic();
+    climber.teleopPeriodic();
 
   }
 }

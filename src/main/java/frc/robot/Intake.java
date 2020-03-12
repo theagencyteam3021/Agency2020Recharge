@@ -45,12 +45,12 @@ public class Intake extends AgencySystem{
         m_forwardLimit1 = m_stage1.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         m_forwardLimit2 = m_stage2.getForwardLimitSwitch(m_forwardLimitPolarity);
 
-        m_forwardLimit1.enableLimitSwitch(false);
+        m_forwardLimit1.enableLimitSwitch(true);
         m_forwardLimit2.enableLimitSwitch(true);
 
         m_stage2.setIdleMode(IdleMode.kBrake);
 
-        m_stage2_encoder = m_stage2.getEncoder();
+        // m_stage2_encoder = m_stage2.getEncoder();
 
 
         m_stage1.burnFlash();
@@ -60,12 +60,13 @@ public class Intake extends AgencySystem{
    
     public void requestIntake() {
         console_debug("requestIntake");
-        //intakeRequested = true;
+        intakeRequested = true;
         m_stage1.set(stage1Power); //-0.75 --
         m_stage2.set(stage2Power); //0.5
     }
 
     public void requestStop() {
+        console_debug("requestStop");
         intakeRequested = false;
         m_stage1.set(0);
         m_stage2.set(0);
@@ -130,9 +131,9 @@ public class Intake extends AgencySystem{
             console_debug("Intake Not Requested"); 
         }
 
-        if (m_stage2_encoder.getVelocity() == 0){
-            m_stage1.set(0);
-        }
+        // if (m_stage2_encoder.getVelocity() == 0){
+        //     m_stage1.set(0);
+        // }
 
         if (m_forwardLimitPolarity == CANDigitalInput.LimitSwitchPolarity.kNormallyOpen && m_forwardLimit2.get())
         {
