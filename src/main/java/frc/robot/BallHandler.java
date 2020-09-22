@@ -176,23 +176,24 @@ public class BallHandler extends AgencySystem {
             justLoaded = false;
             carousel.requestReverseAdvance();
             return;
-        }
+        } else
         if (elevator.isDown() && !elevator.hasBall() && carousel.hasBall3()) {
             console_debug("if (elevator.isDown() && !elevator.hasBall() && carousel.hasBall3())");
             elevator.requestOuttake();
             carousel.requestForwardAdvance();
             return;
-        }
+        } else 
         if (carousel.hasBall2() && !carousel.hasBall3()) {
             console_debug("if (carousel.hasBall2() && !carousel.hasBall3())");
-            carousel.requestReverseAdvance();
+            //carousel.requestReverseAdvance(); hunter thinks this is the problem
+            carousel.requestForwardAdvance();
             return;
-        }
+        } else
         if (carousel.hasBall1() && !carousel.hasBall3()) {
             console_debug("if (carousel.hasBall1() && !carousel.hasBall3())");
             carousel.requestForwardAdvance();
             return;
-        }
+        } else
         if (carousel.hasBall1() && !carousel.hasBall2()) {
             console_debug("if (carousel.hasBall1() && !carousel.hasBall2())");
             carousel.requestForwardAdvance();

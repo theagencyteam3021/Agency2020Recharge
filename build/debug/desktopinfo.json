@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Agency2020Recharge (in project Agency2020Recharge)",
+    "file": "D:\\Users\\Raj\\Documents\\GitHub\\Agency2020Recharge\\build\\libs\\Agency2020Recharge.jar",
+    "extensions": [
+      "D:\\Users\\Raj\\Documents\\GitHub\\Agency2020Recharge\\build\\tmp\\expandedArchives\\halsim_gui-2020.3.2-windowsx86-64.zip_45369a593bb959ce657791ae7ab7334a\\windows\\x86-64\\shared\\halsim_gui.dll"
+    ],
+    "librarydir": "D:\\Users\\Raj\\Documents\\GitHub\\Agency2020Recharge\\build\\tmp\\jniExtractDir",
+    "mainclass": "frc.robot.Main"
+  }
+]

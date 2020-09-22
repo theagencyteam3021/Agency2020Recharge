@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
 
     // Drive
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
-    double XboxPosY = xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);
+    double XboxPosY = -(xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft));
 
     if (xbox.getBumper(Hand.kLeft)) {
       drive.drive((-XboxPosY * 0.5), XboxPosX);
