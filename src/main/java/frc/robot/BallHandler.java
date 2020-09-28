@@ -171,7 +171,7 @@ public class BallHandler extends AgencySystem {
         // return;
         // }
 
-        if (justLoaded && carousel.hasBall1()) {
+        if ((justLoaded && carousel.hasBall1()) && !(carousel.hasBall3() && carousel.hasBall2())) {
             console_debug("if (justLoaded && carousel.hasBall1() )");
             justLoaded = false;
             carousel.requestReverseAdvance();
@@ -197,7 +197,6 @@ public class BallHandler extends AgencySystem {
             console_debug("if (carousel.hasBall1() && !carousel.hasBall2())");
             carousel.requestForwardAdvance();
             return;
-
         }
 
        
