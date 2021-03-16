@@ -23,6 +23,8 @@ public class Robot extends TimedRobot {
 
   private Climber climber;
 
+  private Autonomous auto;
+
   // public String kEnable;
   // public String kDisable;
 
@@ -40,6 +42,8 @@ public class Robot extends TimedRobot {
         DEBUG);
 
     climber = new Climber(RobotMap.climber, "Climber", DEBUG);
+
+    auto = new Autonomous();
 
   }
 
@@ -99,6 +103,7 @@ public class Robot extends TimedRobot {
     ballHandler.teleopPeriodic();
     drive.teleopPeriodic();
     climber.teleopPeriodic();
+    auto.teleopPeriodic();
 
   }
 }
