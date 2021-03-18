@@ -59,6 +59,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    /*
+
     // Drive
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
     double XboxPosY = xbox.getTriggerAxis(Hand.kRight) - xbox.getTriggerAxis(Hand.kLeft);
@@ -99,11 +101,13 @@ public class Robot extends TimedRobot {
     if (secondaryXbox.getYButton()) {
       // ballHandler.bailCarousel();
     }
-
+    */
     ballHandler.teleopPeriodic();
     drive.teleopPeriodic();
     climber.teleopPeriodic();
     auto.teleopPeriodic();
-
+    
+    double[] autoController = auto.controller();
+    drive.drive(autoController[1],autoController[0]);
   }
 }
