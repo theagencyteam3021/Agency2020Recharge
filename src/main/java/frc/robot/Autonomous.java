@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.lang.Math;
 
@@ -22,7 +23,8 @@ public class Autonomous extends AgencySystem {
     private boolean v;
 
     private double sigmoid(double input, double stopPoint, double roughness) {
-        double result = 2/(Math.pow((Math.E),(roughness*((-1.0*input)+stopPoint))))-1;
+        double result = 2/(1+Math.pow((Math.E),(roughness*(stopPoint - input))))-1;
+        SmartDashboard.putNumber("Turn",result);
         return result;
     }
 
@@ -35,12 +37,12 @@ public class Autonomous extends AgencySystem {
             ans[0] = 0.; //Change this to make it seek
             ans[1] = 0.;
         }else{
-            turnPower = sigmoid(x, 0.5, 40.0); //Change third paramater to negative if it turns opposite
-            drivePower = sigmoid(y, 0.9, -20.0);
+            turnPower = sigmoid(x, 0.5, 2.3); //Change third paramater to negative if it turns opposite
+            drivePower = sigmoid(y, 0.9, -2.0);
 
             ans[0] = turnPower;
             ans[1] = 0.;
-            //ans[1] = drivePower; //Once turning is working, uncomment this line
+            ans[1] = drivePower; //Once turning is working, uncomment this line
         }
         return ans;
     }
@@ -51,6 +53,7 @@ public class Autonomous extends AgencySystem {
         x = bx.getDouble(0.0);
         y = by.getDouble(0.0);
         v = bv.getBoolean(false);
+        System.out.println(v);
 
         
     }
