@@ -22,6 +22,8 @@ public class Autonomous extends AgencySystem {
     private double y;
     private boolean v;
 
+    private final double TURN_THRESHHOLD =  0.1;
+
     private double sigmoid(double input, double stopPoint, double roughness) {
         double result = 2/(1+Math.pow((Math.E),(roughness*(stopPoint - input))))-1;
         SmartDashboard.putNumber("Turn",result);
@@ -32,17 +34,22 @@ public class Autonomous extends AgencySystem {
         double[] ans = new double [2];
         double turnPower;
         double drivePower;
+
+        double xCentered = 2*(x-0.5);
+
         //For now, don't move if there's not a ball
         if(!v) {
             ans[0] = 0.; //Change this to make it seek
             ans[1] = 0.;
         }else{
-            turnPower = sigmoid(x, 0.5, 2.3); //Change third paramater to negative if it turns opposite
+            turnPower = sigmoid(x, 0.5, 2.3); 
             drivePower = sigmoid(y, 1.0, -2.5);
 
+            //Don't drive forward if the ball isn't centered
+            if(Math.abs(xCentered) >= TURN_THRESHHOLD) drivePower = 0.;
+
             ans[0] = turnPower;
-            ans[1] = 0.;
-            ans[1] = drivePower; //Once turning is working, uncomment this line
+            ans[1] = drivePower; 
         }
         return ans;
     }
@@ -53,8 +60,5 @@ public class Autonomous extends AgencySystem {
         x = bx.getDouble(0.0);
         y = by.getDouble(0.0);
         v = bv.getBoolean(false);
-        System.out.println(v);
-
-        
     }
 }
