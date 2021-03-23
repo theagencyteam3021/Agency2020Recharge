@@ -106,6 +106,8 @@ public class Robot extends TimedRobot {
     drive.teleopPeriodic();
     climber.teleopPeriodic();
     auto.teleopPeriodic();
+
+    ballHandler.startLoad();
     
     double[] autoController = auto.controller();
     drive.drive(autoController[1],autoController[0]);

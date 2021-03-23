@@ -38,7 +38,7 @@ public class Autonomous extends AgencySystem {
             ans[1] = 0.;
         }else{
             turnPower = sigmoid(x, 0.5, 2.3); //Change third paramater to negative if it turns opposite
-            drivePower = sigmoid(y, 0.9, -2.0);
+            drivePower = sigmoid(y, 1.0, -2.5);
 
             ans[0] = turnPower;
             ans[1] = 0.;
