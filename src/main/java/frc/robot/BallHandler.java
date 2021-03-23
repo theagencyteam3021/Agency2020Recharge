@@ -216,4 +216,12 @@ public class BallHandler extends AgencySystem {
         this.shooter.teleopPeriodic();
     }
 
+    public void autonomousInit() {
+        this.teleopInit();
+    }
+
+    public void autonomousPeriodic() {
+        this.teleopPeriodic();
+    }
+
 }

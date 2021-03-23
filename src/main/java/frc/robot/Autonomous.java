@@ -47,7 +47,7 @@ public class Autonomous extends AgencySystem {
         return ans;
     }
 
-    public void teleopPeriodic() {
+    public void autonomousPeriodic() {
         w = bw.getDouble(0.0);
         h = bh.getDouble(0.0);
         x = bx.getDouble(0.0);

@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    /*
+    
 
     // Drive
     double XboxPosX = xbox.getX(Hand.kLeft); // was previsouly kRight
@@ -101,11 +101,15 @@ public class Robot extends TimedRobot {
     if (secondaryXbox.getYButton()) {
       // ballHandler.bailCarousel();
     }
-    */
+
     ballHandler.teleopPeriodic();
     drive.teleopPeriodic();
     climber.teleopPeriodic();
-    auto.teleopPeriodic();
+
+  }
+  public void autonomousPeriodic() {
+    ballHandler.autonomousPeriodic();
+    auto.autonomousPeriodic();
 
     ballHandler.startLoad();
     
