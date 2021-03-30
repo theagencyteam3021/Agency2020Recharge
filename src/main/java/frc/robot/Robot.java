@@ -107,6 +107,11 @@ public class Robot extends TimedRobot {
     climber.teleopPeriodic();
 
   }
+
+  public void autonomousInit() {
+    ballHandler.autonomousInit();
+  }
+  
   public void autonomousPeriodic() {
     ballHandler.autonomousPeriodic();
     auto.autonomousPeriodic();

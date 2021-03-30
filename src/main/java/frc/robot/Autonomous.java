@@ -42,11 +42,12 @@ public class Autonomous extends AgencySystem {
             ans[0] = 0.; //Change this to make it seek
             ans[1] = 0.;
         }else{
-            turnPower = sigmoid(x, 0.5, 2.3); 
-            drivePower = sigmoid(y, 1.0, -2.5);
+            turnPower = sigmoid(x, 0.5, 3.); 
+            drivePower = sigmoid(y, 1.0, -2.0);
+            System.out.print(drivePower);
 
             //Don't drive forward if the ball isn't centered
-            if(Math.abs(xCentered) >= TURN_THRESHHOLD) drivePower = 0.;
+            //if(Math.abs(xCentered) >= TURN_THRESHHOLD) drivePower = 0.;
 
             ans[0] = turnPower;
             ans[1] = drivePower; 
