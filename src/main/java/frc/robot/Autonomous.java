@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.lang.Math;
@@ -22,7 +23,12 @@ public class Autonomous extends AgencySystem {
     private double y;
     private boolean v;
 
-    private final double TURN_THRESHHOLD =  0.1;
+    private final double TURN_THRESHHOLD =  0.4;
+    private final double DISTANCE_THRESHHOLD = 0.7;
+
+    private final double TIME_TO_DRIVE = 1.5;
+
+    private double lastTime = -1;
 
     private double sigmoid(double input, double stopPoint, double roughness) {
         double result = 2/(1+Math.pow((Math.E),(roughness*(stopPoint - input))))-1;
@@ -30,30 +36,47 @@ public class Autonomous extends AgencySystem {
         return result;
     }
 
-    public double[] controller() {
-        double[] ans = new double [2];
+    public double[] controller(int mode) {
+        double[] ans = new double [3];
         double turnPower;
         double drivePower;
 
         double xCentered = 2*(x-0.5);
 
         //For now, don't move if there's not a ball
-        if(!v) {
-            ans[0] = 0.; //Change this to make it seek
-            ans[1] = 0.;
-        }else{
-            turnPower = sigmoid(x, 0.5, 3.); 
-            drivePower = sigmoid(y, 1.0, -2.0);
-            System.out.print(drivePower);
+        if (mode == 0) {
+            if(!v) {
+                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = 0.38;
+                else ans[0] = 0.; 
+                ans[1] = 0.;
+            }else{
+                turnPower = sigmoid(x, 0.5, 2.); 
+                drivePower = sigmoid(y, 1.0, -2.0);
+                System.out.print(drivePower);
 
-            //Don't drive forward if the ball isn't centered
-            //if(Math.abs(xCentered) >= TURN_THRESHHOLD) drivePower = 0.;
+                //Don't drive forward if the ball isn't centered
+                if(Math.abs(xCentered) >= TURN_THRESHHOLD) drivePower = 0.;
 
-            ans[0] = turnPower;
-            ans[1] = drivePower; 
+                ans[0] = turnPower;
+                ans[1] = drivePower; 
+
+                if (y < DISTANCE_THRESHHOLD) ans[2] = 0;
+                else ans[2] = 1;
+
+                lastTime = Timer.getFPGATimestamp();
+                
+            }
+        } else {
+            ans[0] = 0.;
+            ans[1] = 0.2;
+            
+            if (Timer.getFPGATimestamp() - lastTime >= TIME_TO_DRIVE) ans[2] = 0;
+            else ans[2] = 1;
+            
         }
         return ans;
     }
+    
 
     public void autonomousPeriodic() {
         w = bw.getDouble(0.0);

@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
 
   private Autonomous auto;
 
+  int mode;
+
   // public String kEnable;
   // public String kDisable;
 
@@ -110,6 +112,7 @@ public class Robot extends TimedRobot {
 
   public void autonomousInit() {
     ballHandler.autonomousInit();
+    mode = 0;
   }
   
   public void autonomousPeriodic() {
@@ -118,7 +121,9 @@ public class Robot extends TimedRobot {
 
     ballHandler.startLoad();
     
-    double[] autoController = auto.controller();
+    double[] autoController = auto.controller(mode);
     drive.drive(autoController[1],autoController[0]);
+    if(autoController[2] == 1.) mode = 1;
+    if(autoController[2] == 0.) mode = 0;
   }
 }
