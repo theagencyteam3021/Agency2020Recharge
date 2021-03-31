@@ -12,6 +12,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 
@@ -26,6 +27,9 @@ public class Robot extends TimedRobot {
   private Autonomous auto;
 
   int mode;
+  int numBallsCollected;
+
+  boolean hadBall;
 
   // public String kEnable;
   // public String kDisable;
@@ -72,6 +76,7 @@ public class Robot extends TimedRobot {
     } else {
       drive.drive(-XboxPosY, XboxPosX);
     }
+    SmartDashboard.putNumber("Rotation",XboxPosX);
 
     // // Ball Handler
     if (xbox.getBButton()) {
@@ -113,6 +118,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     ballHandler.autonomousInit();
     mode = 0;
+    numBallsCollected = 0; //set to 3 to test magetometer
+    hadBall = false;
   }
   
   public void autonomousPeriodic() {
@@ -125,5 +132,16 @@ public class Robot extends TimedRobot {
     drive.drive(autoController[1],autoController[0]);
     if(autoController[2] == 1.) mode = 1;
     if(autoController[2] == 0.) mode = 0;
+
+    
+
+    if(ballHandler.intake.hasBall() && !hadBall) {
+      numBallsCollected ++;
+      hadBall = true;
+    } else if (!ballHandler.intake.hasBall() && hadBall) hadBall = false;
+
+    if (numBallsCollected == 3) mode = 2;
+
+    SmartDashboard.putNumber("numCollected", numBallsCollected);
   }
 }

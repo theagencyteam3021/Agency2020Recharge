@@ -4,7 +4,7 @@ import frc.robot.AgencySystem;
 
 public class BallHandler extends AgencySystem {
 
-    private Intake intake;
+    public Intake intake;
     private Carousel carousel;
     private Elevator elevator;
     private Shooter shooter;

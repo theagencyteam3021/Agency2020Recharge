@@ -17,6 +17,9 @@ public class Autonomous extends AgencySystem {
     NetworkTableEntry by = table.getEntry("by");
     NetworkTableEntry bv = table.getEntry("bv");
 
+    NetworkTable hTable = NetworkTableInstance.getDefault().getTable("heading");
+    NetworkTableEntry heading = hTable.getEntry("heading");
+
     private double w;
     private double h;
     private double x;
@@ -46,9 +49,10 @@ public class Autonomous extends AgencySystem {
         //For now, don't move if there's not a ball
         if (mode == 0) {
             if(!v) {
-                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = 0.38;
+                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = sigmoid(Timer.getFPGATimestamp()-lastTime, 0.2, -10.)*0.1 + 0.45;
                 else ans[0] = 0.; 
-                ans[1] = 0.;
+                if (lastTime == -1) ans[1] = 0.3;
+                else ans[1] = 0.;
             }else{
                 turnPower = sigmoid(x, 0.5, 2.); 
                 drivePower = sigmoid(y, 1.0, -2.0);
@@ -66,13 +70,19 @@ public class Autonomous extends AgencySystem {
                 lastTime = Timer.getFPGATimestamp();
                 
             }
-        } else {
+        } else if (mode == 1) {
             ans[0] = 0.;
-            ans[1] = 0.2;
+            ans[1] = 0.4;
             
             if (Timer.getFPGATimestamp() - lastTime >= TIME_TO_DRIVE) ans[2] = 0;
             else ans[2] = 1;
             
+        }
+        else {
+            if(h < 30 && h > 0) {
+                //ans[1] = 0.35;
+                ans[0] = 0.;
+            } else ans[0] = -0.4;
         }
         return ans;
     }
@@ -84,5 +94,7 @@ public class Autonomous extends AgencySystem {
         x = bx.getDouble(0.0);
         y = by.getDouble(0.0);
         v = bv.getBoolean(false);
+
+        h = heading.getDouble(-1.);
     }
 }
