@@ -26,8 +26,8 @@ public class Autonomous extends AgencySystem {
     private double y;
     private boolean v;
 
-    private final double TURN_THRESHHOLD =  0.4;
-    private final double DISTANCE_THRESHHOLD = 0.7;
+    private final double TURN_THRESHHOLD =  0.45;
+    private final double DISTANCE_THRESHHOLD = 0.6;
 
     private final double TIME_TO_DRIVE = 1.5;
 
@@ -49,7 +49,7 @@ public class Autonomous extends AgencySystem {
         //For now, don't move if there's not a ball
         if (mode == 0) {
             if(!v) {
-                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = sigmoid(Timer.getFPGATimestamp()-lastTime, 0.2, -10.)*0.1 + 0.45;
+                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = sigmoid(Timer.getFPGATimestamp()-lastTime, 0.2, -1.)*0.1 + 0.45;
                 else ans[0] = 0.; 
                 if (lastTime == -1) ans[1] = 0.3;
                 else ans[1] = 0.;
@@ -78,11 +78,15 @@ public class Autonomous extends AgencySystem {
             else ans[2] = 1;
             
         }
-        else {
-            if(h < 30 && h > 0) {
+        else if (mode == 2) {
+            if(h < 62 && h > 58) {
                 //ans[1] = 0.35;
                 ans[0] = 0.;
+                ans[2] = 3.;
             } else ans[0] = -0.4;
+        } else {
+            ans[1] = 0.85;
+            ans[2] =3.;
         }
         return ans;
     }

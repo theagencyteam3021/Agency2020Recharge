@@ -140,7 +140,10 @@ public class Robot extends TimedRobot {
       hadBall = true;
     } else if (!ballHandler.intake.hasBall() && hadBall) hadBall = false;
 
-    if (numBallsCollected == 3) mode = 2;
+    if (numBallsCollected == 3) {
+      if (autoController[2] == 3.) mode = 3; 
+      else mode = 2;
+    }
 
     SmartDashboard.putNumber("numCollected", numBallsCollected);
   }
