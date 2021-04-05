@@ -5,23 +5,23 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SPI;
 
 import java.lang.Math;
+
+import com.kauailabs.navx.frc.AHRS;
 
 public class Autonomous extends AgencySystem {
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("vision");
-    NetworkTableEntry bw = table.getEntry("bw");
-    NetworkTableEntry bh = table.getEntry("bh");
     NetworkTableEntry bx = table.getEntry("bx");
     NetworkTableEntry by = table.getEntry("by");
     NetworkTableEntry bv = table.getEntry("bv");
 
-    NetworkTable hTable = NetworkTableInstance.getDefault().getTable("heading");
-    NetworkTableEntry heading = hTable.getEntry("heading");
+    //NetworkTable hTable = NetworkTableInstance.getDefault().getTable("heading");
+    //NetworkTableEntry heading = hTable.getEntry("heading");
 
-    private double w;
-    private double h;
+    private double heading;
     private double x;
     private double y;
     private boolean v;
@@ -32,6 +32,8 @@ public class Autonomous extends AgencySystem {
     private final double TIME_TO_DRIVE = 1.5;
 
     private double lastTime = -1;
+
+    AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
     private double sigmoid(double input, double stopPoint, double roughness) {
         double result = 2/(1+Math.pow((Math.E),(roughness*(stopPoint - input))))-1;
@@ -79,11 +81,10 @@ public class Autonomous extends AgencySystem {
             
         }
         else if (mode == 2) {
-            if(h < 62 && h > 58) {
-                //ans[1] = 0.35;
+            if(heading <= 1 && heading >= -1) {
                 ans[0] = 0.;
                 ans[2] = 3.;
-            } else ans[0] = -0.4;
+            } else ans[0] = sigmoid(heading,0,1)*0.45;
         } else {
             ans[1] = 0.85;
             ans[2] =3.;
@@ -93,12 +94,14 @@ public class Autonomous extends AgencySystem {
     
 
     public void autonomousPeriodic() {
-        w = bw.getDouble(0.0);
-        h = bh.getDouble(0.0);
         x = bx.getDouble(0.0);
         y = by.getDouble(0.0);
         v = bv.getBoolean(false);
 
-        h = heading.getDouble(-1.);
+        heading = ahrs.getFusedHeading();
+
+        SmartDashboard.putData(ahrs);
+
+        //h = heading.getDouble(-1.);
     }
 }
