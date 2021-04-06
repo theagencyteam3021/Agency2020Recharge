@@ -32,6 +32,9 @@ public class Autonomous extends AgencySystem {
     private final double TIME_TO_DRIVE = 1.5;
 
     private double lastTime = -1;
+    private double seekDir = 1.;
+
+    private boolean wasValid;
 
     AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
@@ -51,11 +54,13 @@ public class Autonomous extends AgencySystem {
         //For now, don't move if there's not a ball
         if (mode == 0) {
             if(!v) {
-                if (Timer.getFPGATimestamp()-lastTime > 0.5 && lastTime != -1) ans[0] = sigmoid(Timer.getFPGATimestamp()-lastTime, 0.2, -1.)*0.1 + 0.45;
+                if (lastTime != -1) ans[0] = seekDir*(sigmoid(Timer.getFPGATimestamp()-lastTime, 0.2, -1.)*0.1 + 0.42);
                 else ans[0] = 0.; 
                 if (lastTime == -1) ans[1] = 0.3;
                 else ans[1] = 0.;
+                wasValid=false;
             }else{
+                if (!wasValid) seekDir *= -1;
                 turnPower = sigmoid(x, 0.5, 2.); 
                 drivePower = sigmoid(y, 1.0, -2.0);
                 System.out.print(drivePower);
@@ -70,6 +75,7 @@ public class Autonomous extends AgencySystem {
                 else ans[2] = 1;
 
                 lastTime = Timer.getFPGATimestamp();
+                wasValid = true;
                 
             }
         } else if (mode == 1) {
@@ -81,12 +87,13 @@ public class Autonomous extends AgencySystem {
             
         }
         else if (mode == 2) {
-            if(heading <= 1 && heading >= -1) {
+            if(heading <= 3 && heading >= -3) {
                 ans[0] = 0.;
                 ans[2] = 3.;
-            } else ans[0] = sigmoid(heading,0,1)*0.45;
+            } else ans[0] = sigmoid(heading,0,2)*-0.48;
         } else {
-            ans[1] = 0.85;
+            ans[0] =0.;
+            ans[1] = 0.8;
             ans[2] =3.;
         }
         return ans;
@@ -99,6 +106,9 @@ public class Autonomous extends AgencySystem {
         v = bv.getBoolean(false);
 
         heading = ahrs.getFusedHeading();
+
+        if (heading > 180.) heading -= 360;
+        SmartDashboard.putNumber("Read heading", heading);
 
         SmartDashboard.putData(ahrs);
 

@@ -112,6 +112,7 @@ public class Robot extends TimedRobot {
     ballHandler.teleopPeriodic();
     drive.teleopPeriodic();
     climber.teleopPeriodic();
+    auto.autonomousPeriodic();
 
   }
 
